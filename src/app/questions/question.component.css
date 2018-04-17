@@ -1,0 +1,54 @@
+.titleZone {
+  height: 35px;
+  font-size: 16px;
+  padding: 20px 0 0 0;
+  text-align: center;
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.contentZone {
+  height: 300px;
+  padding: 20px 20px 20px 20px;
+  overflow: auto;
+  font-size: 16px;
+}
+
+.btnZone {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #f2f2f2;
+  margin-top: 15px;
+  padding: 10px 0;
+  height: 55px;
+  font-size: 16px;
+  padding: 10px;
+}
+
+.mainDiv {
+  min-width: 308px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  max-width: 800px;
+  width: 90%;
+  margin: -300px 0 0 -400px;
+}
+
+button {
+  border-radius: 5px;
+  background: #f2f2f2;
+  font-family: Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial, sans-serif;
+}
+
+.chosenBtn{
+  background: lightgreen !important;
+}
+
+@media screen and (max-width: 900px) {
+    .mainDiv{
+        left: 0;
+        margin: 20px;
+        top:50px;
+    }
+}

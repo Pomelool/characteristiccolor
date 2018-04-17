@@ -1,0 +1,58 @@
+<div mdl-shadow='2' class="mainDiv">
+  <div class="titleZone">
+    Question {{currentIndex + 1}} / {{questionArr.length}}
+  </div>
+  <div class="contentZone">
+    <ng-container *ngIf="stateVar=='question';">
+      <b>判断下列陈述是否符合您的孩子：</b>
+      <br>
+      <br> {{questionArr[currentIndex].question}}
+    </ng-container>
+    <ng-container *ngIf="stateVar=='result';">
+      <b>您的孩子的性格色彩分析结果</b>
+      <br>
+      <br>
+      <p *ngIf="resultE.type==='red'" style="color:red">红色：{{resultE.percentage}}%</p>
+      <p *ngIf="resultE.type==='blue'" style="color:blue">蓝色：{{resultE.percentage}}%</p>
+      <p *ngIf="resultE.type==='yellow'" style="color:burlywood">黄色：{{resultE.percentage}}%</p>
+      <p *ngIf="resultE.type==='green'" style="color:green">绿色：{{resultE.percentage}}%</p>
+      <p *ngIf="resultE.type==='purple'" style="color:purple">紫色：{{resultE.percentage}}%</p>
+      <p *ngIf="resultE.type==='orange'" style="color:orange">橙色：{{resultE.percentage}}%</p>
+      <p>{{resultE.result}}</p>
+    </ng-container>
+  </div>
+  <div class="btnZone">
+    <ng-container *ngIf="stateVar==='question'">
+      <button mdl-button mdl-button-type="raised" mdl-ripple [disabled]="currentIndex==0" (click)="previousQuestion()">
+        前一题
+      </button>
+      <button mdl-button mdl-button-type="raised" [ngClass]="{'chosenBtn': questionArr[currentIndex].result == true}" mdl-ripple
+        (click)="choose(true)">
+        符合
+      </button>
+      <button mdl-button mdl-button-type="raised" [ngClass]="{'chosenBtn': questionArr[currentIndex].result == false}" mdl-ripple
+        (click)="choose(false)">
+        不符合
+      </button>
+
+      <button *ngIf="currentIndex==questionArr.length-1; else nextQuestionBtn" mdl-button mdl-button-type="raised" mdl-ripple [disabled]="questionArr[questionArr.length-1].result == null"
+        (click)="submit()">
+        提交
+      </button>
+      <ng-template #nextQuestionBtn>
+        <button mdl-button mdl-button-type="raised" mdl-ripple [disabled]="questionArr[currentIndex].result == null || currentIndex == questionArr.length - 1"
+          (click)="nextQuestion()">
+          后一题
+        </button>
+      </ng-template>
+    </ng-container>
+    <ng-container *ngIf="stateVar==='result'">
+      <button mdl-button mdl-button-type="raised" mdl-ripple (click)="reset() ">
+        重置
+      </button>
+    </ng-container>
+
+  </div>
+</div>
+
+<dialog-outlet></dialog-outlet>
