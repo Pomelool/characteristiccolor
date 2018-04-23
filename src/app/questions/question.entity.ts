@@ -3,7 +3,7 @@ import { ScoreEntity } from "./score.entity";
 export class QuestionEntity {
     public question: string;
     public number: number;
-    public result: boolean;
+    public result: string;
     public scoreObj:ScoreEntity;
 
     constructor() {

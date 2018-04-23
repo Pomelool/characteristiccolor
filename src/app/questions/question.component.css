@@ -45,6 +45,16 @@ button {
   background: lightgreen !important;
 }
 
+.qbtns{
+  width: 150px;
+  height: 30px;
+  margin-top: 10px;
+}
+
+.qbtnBox{
+  padding: 10px 0 0 0;
+}
+
 @media screen and (max-width: 900px) {
     .mainDiv{
         left: 0;

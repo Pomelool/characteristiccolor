@@ -1,0 +1,10 @@
+<div class="loginBox" [mdl-shadow]="2">
+    <mdl-textfield type="text" label="用户名" [(ngModel)]="urnm" floating-label></mdl-textfield>
+    <br>
+    <mdl-textfield type="text" label="密码" [(ngModel)]="pswrd" floating-label></mdl-textfield>
+    <br>
+    <button [disabled]="urnm === null || pswrd === null" (click)="onSubmit()" mdl-button mdl-button-type="raised" mdl-colored="primary">
+       登录
+    </button>
+    <p class="errMsg" *ngIf="errMsg != ''">{{errMsg}}</p>
+</div>

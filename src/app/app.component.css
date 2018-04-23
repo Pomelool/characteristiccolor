@@ -2,3 +2,9 @@
   font-size: 18px;
   padding: 20px 0 0 25px;
 }
+
+mdl-layout-content {
+  background: url("./backgroundImg.jpg");
+  background-repeat: repeat;
+  background-size: 500px 200px;
+}

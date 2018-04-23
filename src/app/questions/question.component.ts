@@ -19,7 +19,29 @@ export class QuestionComponent {
     //change this when data updates
     public fullScoreObj: any = { 'blue': 39, 'green': 58, 'orange': 67, 'purple': 64, 'red': 61, 'yellow': 58 };
     public resultE: ResultEntity = new ResultEntity();
-    public stateVar = "question";
+    public stateVar = "infos";
+    public info: object = {
+        "name": "",
+        "age": "",
+        "gender": ""
+    }
+    public genders = [
+        {
+            "name": "男",
+            "value": "m"
+        },
+        {
+            "name": "女",
+            "value": "f"
+        }
+    ]
+    public choicePercentages: object = {
+        "1": -1,
+        "2": -0.8,
+        "3": 0,
+        "4": 0.8,
+        "5": 1
+    }
 
     constructor(
         private dialogService: MdlDialogService
@@ -41,6 +63,35 @@ export class QuestionComponent {
         }
     }
 
+    public onSubmitInfo() {
+        let result = this.dialogService.confirm('确定要提交此个人信息吗？', '取消', '确定');
+        // if you need both answers
+        result.subscribe(
+            () => {
+                this.resultE.infoObj = this.info;
+                this.stateVar = "question";
+            },
+            (err: any) => {
+
+            }
+        );
+    }
+
+    public checkInfoValid(){
+        if(
+            this.info['name'] != null &&
+            this.info['age'] != null &&
+            this.info['gender'] != null &&
+            this.info['name'].trim() != '' &&
+            this.info['age'].trim() != '' &&
+            this.info['gender'].trim() != '' &&
+            this.info['age'].match(/[0-9]*(\.[0-9]+)?/)[0] == this.info['age'].match(/[0-9]*(\.[0-9]+)?/)['input']
+        ){
+            return false;
+        }
+        return true;
+    }
+
     public previousQuestion() {
         this.currentIndex -= 1;
     }
@@ -49,20 +100,17 @@ export class QuestionComponent {
         this.currentIndex += 1;
     }
 
-    public choose(tf: boolean) {
-        if (tf != this.questionArr[this.currentIndex].result) {
+    public choose(tf: string) {
+        let oldChoice = this.questionArr[this.currentIndex].result;
+        if (tf != oldChoice) {
             for (let ind in this.scoreObj) {
-                if (tf) {
-                    this.scoreObj[ind] += this.questionArr[this.currentIndex].scoreObj[ind];
+                if(oldChoice != null){
+                    this.scoreObj[ind] -= this.choicePercentages[oldChoice] * this.questionArr[this.currentIndex].scoreObj[ind];
                 }
-                else {
-                    this.scoreObj[ind] -= this.questionArr[this.currentIndex].scoreObj[ind];
-                }
+                this.scoreObj[ind] += this.choicePercentages[tf] * this.questionArr[this.currentIndex].scoreObj[ind];
+                this.scoreObj[ind] = Math.round( this.scoreObj[ind] * 100 ) / 100;
             }
-            this.questionArr[this.currentIndex].result = tf;
-        }
-        if (this.currentIndex < this.questionArr.length - 1) {
-            this.currentIndex += 1;
+            this.questionArr[this.currentIndex].result = tf ;
         }
     }
 
@@ -79,7 +127,12 @@ export class QuestionComponent {
         }
         this.resultE.percentage = maxPercentage;
         this.resultE.type = maxType;
-        this.resultE.result = this.data[maxType];
+        this.resultE.commentMsg = this.data[maxType];
+        let choicesObj = {};
+        for (let question of this.questionArr) {
+            choicesObj[question.number] = question.result;
+        }
+        this.resultE.choicesObj = choicesObj;
     }
 
     public submit() {
@@ -99,7 +152,7 @@ export class QuestionComponent {
     public reset() {
         this.currentIndex = 0;
         this.scoreObj = { 'blue': 0, 'green': 0, 'orange': 0, 'purple': 0, 'red': 0, 'yellow': 0 };
-        for(let qe of this.questionArr){
+        for (let qe of this.questionArr) {
             qe.result = null;
         }
         this.stateVar = 'question';

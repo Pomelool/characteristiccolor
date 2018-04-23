@@ -1,24 +1,59 @@
-<div mdl-shadow='2' class="mainDiv">
+<div [mdl-shadow]='2' class="mainDiv">
   <div class="titleZone">
-    Question {{currentIndex + 1}} / {{questionArr.length}}
+    <ng-container *ngIf="stateVar=='question'">
+      问题 {{currentIndex + 1}} / {{questionArr.length}}
+    </ng-container>
+    <ng-container *ngIf="stateVar==='infos'">
+      孩子个人信息
+    </ng-container>
   </div>
   <div class="contentZone">
-    <ng-container *ngIf="stateVar=='question';">
+    <ng-container *ngIf="stateVar==='question';">
       <b>判断下列陈述是否符合您的孩子：</b>
       <br>
       <br> {{questionArr[currentIndex].question}}
+      <br>
+      <div class="qbtnBox">
+        <button mdl-button mdl-button-type="raised" class="qbtns" [ngClass]="{'chosenBtn': questionArr[currentIndex].result == '1'}"
+          mdl-ripple (click)="choose('1')">
+          符合
+        </button>
+        <br>
+        <button mdl-button mdl-button-type="raised" class="qbtns" [ngClass]="{'chosenBtn': questionArr[currentIndex].result == '2'}"
+          mdl-ripple (click)="choose('2')">
+          比较符合
+        </button>
+        <br>
+        <button mdl-button mdl-button-type="raised" class="qbtns" [ngClass]="{'chosenBtn': questionArr[currentIndex].result == '3'}"
+          mdl-ripple (click)="choose('3')">
+          有时符合有时不符合
+        </button>
+        <br>
+        <button mdl-button mdl-button-type="raised" class="qbtns" [ngClass]="{'chosenBtn': questionArr[currentIndex].result == '4'}"
+          mdl-ripple (click)="choose('4')">
+          比较不符合
+        </button>
+        <br>
+        <button mdl-button mdl-button-type="raised" class="qbtns" [ngClass]="{'chosenBtn': questionArr[currentIndex].result == '5'}"
+          mdl-ripple (click)="choose('5')">
+          不符合
+        </button>
+        <br>
+      </div>
+
     </ng-container>
     <ng-container *ngIf="stateVar=='result';">
-      <b>您的孩子的性格色彩分析结果</b>
+      <p>感谢您的参与，提交中，请切勿刷新或退出网页...</p>
+      <p>提交成功！谢谢！</p>
+    </ng-container>
+    <ng-container *ngIf="stateVar==='infos'">
+      <mdl-textfield type="text" label="姓名" [(ngModel)]="info.name" floating-label></mdl-textfield>
       <br>
+      <mdl-textfield type="text" pattern="[0-9]*(\.[0-9]+)?" label="年龄" [(ngModel)]="info.age" error-msg="请输入数字" floating-label></mdl-textfield>
       <br>
-      <p *ngIf="resultE.type==='red'" style="color:red">红色：{{resultE.percentage}}%</p>
-      <p *ngIf="resultE.type==='blue'" style="color:blue">蓝色：{{resultE.percentage}}%</p>
-      <p *ngIf="resultE.type==='yellow'" style="color:burlywood">黄色：{{resultE.percentage}}%</p>
-      <p *ngIf="resultE.type==='green'" style="color:green">绿色：{{resultE.percentage}}%</p>
-      <p *ngIf="resultE.type==='purple'" style="color:purple">紫色：{{resultE.percentage}}%</p>
-      <p *ngIf="resultE.type==='orange'" style="color:orange">橙色：{{resultE.percentage}}%</p>
-      <p>{{resultE.result}}</p>
+      <mdl-select label="性别" [(ngModel)]="info.gender" floating-label>
+        <mdl-option *ngFor="let p of genders" [value]="p.value">{{p.name}}</mdl-option>
+      </mdl-select>
     </ng-container>
   </div>
   <div class="btnZone">
@@ -26,28 +61,25 @@
       <button mdl-button mdl-button-type="raised" mdl-ripple [disabled]="currentIndex==0" (click)="previousQuestion()">
         前一题
       </button>
-      <button mdl-button mdl-button-type="raised" [ngClass]="{'chosenBtn': questionArr[currentIndex].result == true}" mdl-ripple
-        (click)="choose(true)">
-        符合
-      </button>
-      <button mdl-button mdl-button-type="raised" [ngClass]="{'chosenBtn': questionArr[currentIndex].result == false}" mdl-ripple
-        (click)="choose(false)">
-        不符合
-      </button>
-
       <button *ngIf="currentIndex==questionArr.length-1; else nextQuestionBtn" mdl-button mdl-button-type="raised" mdl-ripple [disabled]="questionArr[questionArr.length-1].result == null"
         (click)="submit()">
         提交
       </button>
       <ng-template #nextQuestionBtn>
-        <button mdl-button mdl-button-type="raised" mdl-ripple [disabled]="questionArr[currentIndex].result == null || currentIndex == questionArr.length - 1"
+        <button mdl-button mdl-button-type="raised" mdl-ripple [disabled]="questionArr[currentIndex].result == null || questionArr[currentIndex].result === '' || currentIndex == questionArr.length - 1"
           (click)="nextQuestion()">
           后一题
         </button>
       </ng-template>
     </ng-container>
+    <ng-container *ngIf="stateVar==='infos'">
+      <button [disabled]="checkInfoValid()" mdl-button
+        mdl-button-type="raised" mdl-ripple (click)="onSubmitInfo()">
+        开始测试
+      </button>
+    </ng-container>
     <ng-container *ngIf="stateVar==='result'">
-      <button mdl-button mdl-button-type="raised" mdl-ripple (click)="reset() ">
+      <button mdl-button mdl-button-type="raised" mdl-ripple (click)="reset()">
         重置
       </button>
     </ng-container>
@@ -56,3 +88,11 @@
 </div>
 
 <dialog-outlet></dialog-outlet>
+
+
+<!-- <p *ngIf="resultE.type==='red'" style="color:red">红色：{{resultE.percentage}}%</p>
+<p *ngIf="resultE.type==='blue'" style="color:blue">蓝色：{{resultE.percentage}}%</p>
+<p *ngIf="resultE.type==='yellow'" style="color:burlywood">黄色：{{resultE.percentage}}%</p>
+<p *ngIf="resultE.type==='green'" style="color:green">绿色：{{resultE.percentage}}%</p>
+<p *ngIf="resultE.type==='purple'" style="color:purple">紫色：{{resultE.percentage}}%</p>
+<p *ngIf="resultE.type==='orange'" style="color:orange">橙色：{{resultE.percentage}}%</p> -->

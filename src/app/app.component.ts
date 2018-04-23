@@ -7,5 +7,12 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   public title = '性格色彩测试';
+  public userLoginApproved: boolean = false;
+
+  public onLoginSuccess(urnm: string) {
+    if (urnm == "user") {
+      this.userLoginApproved = true;
+    }
+  }
 }
- 
+

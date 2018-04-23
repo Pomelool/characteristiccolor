@@ -1,7 +1,9 @@
 export class ResultEntity {
     public type: string;
     public percentage: number;
-    public result: string;
+    public commentMsg: string;
+    public choicesObj: object;
+    public infoObj: object;
 
     constructor() {
     }

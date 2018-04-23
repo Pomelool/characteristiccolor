@@ -4,6 +4,7 @@
   </mdl-layout-header>
 
   <mdl-layout-content>
-    <question></question>
+    <login-view *ngIf="!userLoginApproved" (success)="onLoginSuccess($event)"></login-view>
+    <question *ngIf="userLoginApproved"></question>
   </mdl-layout-content>
 </mdl-layout>
